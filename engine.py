@@ -11,8 +11,8 @@ MODEL_NAME = "intfloat/multilingual-e5-base"
 MODEL_CACHE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models")
 
 PDF_PATH = "data/data_text.pdf"
-MAX_CHUNK_CHARS = 600   # максимальный размер чанка в символах
-OVERLAP_CHARS = 120     # перекрытие в символах
+MAX_CHUNK_CHARS = 600   
+OVERLAP_CHARS = 120     
 
 
 def read_pdf(path: str) -> str:

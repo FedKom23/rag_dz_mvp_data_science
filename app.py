@@ -4,7 +4,7 @@ import streamlit as st
 from engine import load_index, semantic_search
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
-OLLAMA_MODEL = "llama3.1:8b"
+OLLAMA_MODEL = "qwen2.5:7b"
 
 
 @st.cache_resource
@@ -16,7 +16,7 @@ def call_ollama(prompt: str) -> str | None:
     try:
         resp = requests.post(
             OLLAMA_URL,
-            json={"model": OLLAMA_MODEL, "prompt": prompt, "stream": False},
+            json={"model": OLLAMA_MODEL, "prompt": prompt, "stream": False, "options": {"temperature": 0}},
             timeout=60,
         )
         resp.raise_for_status()
@@ -28,17 +28,19 @@ def call_ollama(prompt: str) -> str | None:
 def make_prompt(question: str, context_chunks: list[str]) -> str:
     context = "\n\n".join(context_chunks)
     return (
-        "Ты помощник, отвечающий на вопросы по Национальной стратегии развития "
-        "искусственного интеллекта на период до 2030 года.\n"
-        "Используй только предоставленный контекст. Отвечай на русском языке. "
-        "Если ответа в контексте нет — так и скажи.\n\n"
+        "Ты — точный ассистент по Национальной стратегии развития ИИ до 2030 года.\n"
+        "Правила:\n"
+        "1. Отвечай СТРОГО на заданный вопрос — первое предложение должно быть прямым ответом.\n"
+        "2. Используй ТОЛЬКО информацию из контекста ниже. Не добавляй ничего от себя.\n"
+        "3. Ответ — 1-2 предложения, без вводных слов и повторения вопроса.\n"
+        "4. Если ответа в контексте нет — ответь: «В контексте нет информации по данному вопросу.»\n"
+        "5. Отвечай на русском языке.\n\n"
         f"Контекст:\n{context}\n\n"
         f"Вопрос: {question}\n\n"
         "Ответ:"
     )
 
 
-# ── Интерфейс ─────────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Справочник по стратегии ИИ",
     page_icon="🤖",

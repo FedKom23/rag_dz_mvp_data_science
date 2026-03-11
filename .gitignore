@@ -212,7 +212,7 @@ __pycache__/
 CLAUDE.md
 PLAN.md
 venv_faiss/
-# models/
-# *.pkl
+models/
+# *.pkl1
 # *.bin
 .DS_Store
